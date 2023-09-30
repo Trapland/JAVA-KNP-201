@@ -2,15 +2,28 @@ package step.learning.oop;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.Objects;
 
 public class OopDemo {
-
     public void run(){
+        Library library = new Library();
+        try {
+            library.load();
+        }
+        catch (RuntimeException ex){
+            System.err.println(ex);
+        }
+    library.printAllCards();
+    }
+    public void run2(){
         // JSON - засобами Gson
         Gson gson = new Gson();
         String str = "{\"author\": \"D. Knuth\",\"title\": \"Art of Programming\"}";
@@ -22,8 +35,13 @@ public class OopDemo {
         Gson gson2 = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
         System.out.println(gson2.toJson(book));
         try (
-                InputStream bookStream = this.getClass().getClassLoader().getResourceAsStream("book.json");
-                InputStreamReader bookReader = new InputStreamReader(Objects.requireNonNull(bookStream));
+                InputStream bookStream =                                // Одержуємо доступ до ресурсу
+                        this.getClass()                                 // Оскільки файл копіюється до папки
+                                .getClassLoader()                       // з класами, знаходимо її через getClassLoader()
+                                .getResourceAsStream("book.json");
+                InputStreamReader bookReader =                          // Для використання gson.fromJson
+                        new InputStreamReader(                          // Необхідний Reader, відповідно
+                                Objects.requireNonNull(bookStream));    // створюємо InputStreamReader
 
         ){
             book = gson.fromJson(bookReader, Book.class);
@@ -42,6 +60,7 @@ public class OopDemo {
             library.add(new Book("Richter", "Platform .NET"));
             library.add(new Newspaper("Washington Post", "2023-05-06"));
             library.add(new Journal("Amogus Spawning", 32));
+            library.save();
         }
         catch (Exception ex){
             System.out.println("Literature creation error" + ex.getMessage());
@@ -62,11 +81,7 @@ public class OopDemo {
 
     }
 }
-/*
-getClassLoader(), викликаний на довільному типі з нашого проєкту
-дозволить
 
- */
 /*
 ООП - об'єктно-орієнтована парадигма программування
 Програма - управління об'єктами та їх взаємодія

@@ -1,9 +1,11 @@
 package step.learning.oop;
 
+import com.google.gson.JsonObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+@Serializable
 public class Newspaper extends Literature implements Periodic{
     private Date date;
 
@@ -35,5 +37,26 @@ public class Newspaper extends Literature implements Periodic{
     @Override
     public String getPeriod() {
         return "daily";
+    }
+
+    public static Newspaper fromJson(JsonObject jsonObject) throws ParseException {
+        String[] requiredField = {"title","date"};
+        for (String field : requiredField){
+            if(!jsonObject.has(field)){
+                throw new ParseException("Missing required field: " + field,0);
+            }
+        }
+        return new Newspaper(jsonObject.get(requiredField[0]).getAsString(),
+                jsonObject.get(requiredField[1]).getAsString());
+    }
+    @ParseChecker
+    public static boolean isParseableFromJson ( JsonObject jsonObject){
+        String[] requiredFields = {"date", "title"};
+        for (String field : requiredFields){
+            if(!jsonObject.has(field)){
+                return false;
+            }
+        }
+        return true;
     }
 }

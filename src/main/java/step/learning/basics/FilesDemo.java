@@ -2,12 +2,16 @@ package step.learning.basics;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
 public class FilesDemo {
 
-    public void run(){
+    public void run1(){
         //зберігання даних у файлах
         String filename = "test.txt";
         //Всі види роботи з даними у файлі - через Stream, особливість усіх stream
@@ -135,21 +139,32 @@ public class FilesDemo {
         }
 
     }
-    public void run1(){
+    public void run(){
         // Основа роботи з файлами - java.io.File
         File dir = new File("./");
+        SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
         // створення new File НЕ впливає на файлову систему, це лише
         // програмний об'єкт, який відповідає за зазначений шлях
-        if(dir.exists()){
-            System.out.println("Path exists");
-        }
-        else {
-            System.out.println("Path does not exist");
-        }
-        System.out.printf("Path is %s %n", dir.isDirectory() ? "directory" : "file");
-        System.out.println(dir.getAbsolutePath());
-        for ( String filename : dir.list()) { // dir.list() - лише імена (String)
-            System.out.println(filename);       // dir.listFiles() - об'єкти (File)
+//        if(dir.exists()){
+//            System.out.println("Path exists");
+//        }
+//        else {
+//            System.out.println("Path does not exist");
+//        }
+//        System.out.printf("Path is %s %n", dir.isDirectory() ? "directory" : "file");
+//        System.out.println(dir.getAbsolutePath());
+        System.out.println("LastWriteTime       Type   Length Name");
+        for ( File file : Objects.requireNonNull(dir.listFiles())) { // dir.list() - лише імена (String)
+            System.out.print(DateFormat.format(new Date(file.lastModified())) + "         ");
+            if(file.isDirectory())
+                System.out.print("<DIR>   ");
+            else
+                System.out.print("<FILE>  ");
+            if(file.length() != 0)
+                System.out.print(file.length() + "  ");
+            else
+                System.out.print("     ");
+            System.out.println(file.getName());       // dir.listFiles() - об'єкти (File)
         }
     }
 }
