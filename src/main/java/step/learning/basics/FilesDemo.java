@@ -139,7 +139,7 @@ public class FilesDemo {
         }
 
     }
-    public void run(){
+    public void run3(){
         // Основа роботи з файлами - java.io.File
         File dir = new File("./");
         SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -166,6 +166,50 @@ public class FilesDemo {
                 System.out.print("     ");
             System.out.println(file.getName());       // dir.listFiles() - об'єкти (File)
         }
+    }
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Input a number of lines in file: ");
+        int num = scanner.nextInt();
+        Random r = new Random();
+        try(OutputStream writer = new FileOutputStream("test.txt")) {
+            for (int i = 0; i < num; i++) {
+                while(true) {
+                    if(r.nextInt(20) == 1) {
+                        writer.write('\n');
+                        break;
+                    }
+                    else {writer.write(((byte) r.nextInt(57) + 65));}
+                }
+            }
+        }
+        catch (IOException ex){
+            System.err.println(ex.getMessage());
+        }
+        int max = 0;
+        int max_line = 0;
+        int temp_counter = 0;
+        int temp_line = 1;
+        try (InputStream reader = new FileInputStream( "test.txt" )) {
+            int c ;
+            while ( (c = reader.read()) != -1) {
+                temp_counter ++;
+                if(c == (int)'\n') {
+                    if(max < temp_counter) {
+                        max = temp_counter;
+                        max_line = temp_line;
+                    }
+                    temp_line++;
+                    temp_counter = 0;
+                }
+            }
+            System.out.printf("Longest line %s with %s symbols",max_line,max);
+        }
+        catch (IOException ex)
+        {
+            System.err.println(ex.getMessage());
+        }
+
     }
 }
 /* Робота з файлами розглядається у двох аспектах:
