@@ -14,6 +14,12 @@ import java.util.Objects;
 
 public class OopDemo {
     public void run(){
+        Library l = new Library();
+        l.Add(new Book("Author 1", "Book1"));
+        l.Add(new Book("Author 2", "Book2"));
+        l.printAllCards();
+    }
+    public void run3(){
         Library library = new Library();
         try {
             library.load();

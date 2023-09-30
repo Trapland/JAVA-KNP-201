@@ -140,6 +140,15 @@ public class Library {
         }*/
         throw new ParseException("Literature type unrecognised",0);
     }
+    public void Add(Literature l){
+        if(l != null)
+            funds.add(l);
+    }
+    public void PrintAll(){
+        for (Literature l: funds) {
+            System.out.println(l.getCard());
+        }
+    }
 
     public void printAllCards(){
         for (Literature literature : funds){

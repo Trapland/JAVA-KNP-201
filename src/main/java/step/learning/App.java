@@ -13,8 +13,8 @@ public class App
     public static void main( String[] args )
     {
         //new BasicsDemo().run();
-        new FilesDemo().run();
-        //new OopDemo().run();
+        //new FilesDemo().run();
+        new OopDemo().run();
     }
 }
 
