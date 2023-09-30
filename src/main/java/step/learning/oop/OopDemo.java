@@ -15,9 +15,31 @@ import java.util.Objects;
 public class OopDemo {
     public void run(){
         Library l = new Library();
-        l.Add(new Book("Author 1", "Book1"));
-        l.Add(new Book("Author 2", "Book2"));
-        l.printAllCards();
+        try {
+            l.add(new Book("D. Knuth", "Art of Programming"));
+            l.add(new Newspaper("Daily mail", "2023-05-06"));
+            l.add(new Journal("New Journal", 157));
+            l.add(new Hologram("Titan Holo"));
+            l.add(new Book("Richter", "Platform .NET"));
+            l.add(new Newspaper("Washington Post", "2023-05-06"));
+            l.add(new Journal("Amogus Spawning", 32));
+            l.add(new Hologram("Holo"));
+        }
+        catch (Exception ex){
+            System.out.println("Literature creation error" + ex.getMessage());
+        }
+        System.out.println("Printable:");
+        l.printPrintable();
+        System.out.println();
+        System.out.println("NonPrintable:");
+        l.printNonPrintable();
+        System.out.println();
+        System.out.println("Multiple:");
+        l.printMultiple();
+        System.out.println();
+        System.out.println("NonMultiple:");
+        l.printNonMultiple();
+
     }
     public void run3(){
         Library library = new Library();

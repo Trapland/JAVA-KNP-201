@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import java.text.ParseException;
 import java.util.Date;
 @Serializable
-public class Journal extends Literature implements Copyable,Periodic{
+public class Journal extends Literature implements Copyable,Periodic, Printable,Multiple{
     private int number;
 
     public Journal(String title, int number) {
@@ -49,5 +49,10 @@ public class Journal extends Literature implements Copyable,Periodic{
             }
         }
         return true;
+    }
+
+    @Override
+    public int getCount() {
+        return 5;
     }
 }

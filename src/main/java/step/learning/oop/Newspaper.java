@@ -6,7 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 @Serializable
-public class Newspaper extends Literature implements Periodic{
+public class Newspaper extends Literature implements Periodic, Printable{
     private Date date;
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

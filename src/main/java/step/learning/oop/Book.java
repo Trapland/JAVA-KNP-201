@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 
 import java.text.ParseException;
 @Serializable
-public class Book extends Literature implements Copyable{
+public class Book extends Literature implements Copyable, Printable,Multiple{
     private String author;
 
     public Book(String author, String title) {
@@ -44,6 +44,11 @@ public class Book extends Literature implements Copyable{
             }
         }
         return true;
+    }
+
+    @Override
+    public int getCount() {
+        return 10;
     }
 }
 /*
