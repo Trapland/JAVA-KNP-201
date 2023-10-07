@@ -40,20 +40,61 @@ public class AsyncDemo {
             }
 
         }
-    }
-    public void run() {
-        System.out.println( "Async demo" ) ;
-        int months = 12;
-        Thread[] threads = new Thread[months];
-        sum = 100;
-        activeThreadsCount = months;
-        //multiThreadDemo();
-        for (int i = 0; i < 12; i++) {
-            threads[i] = new Thread(new MonthRate(i + 1));
-            threads[i].start();
-        }
+
 
     }
+    class MyThreads implements Runnable{
+        private final int delay;
+        private int num;
+        public MyThreads(int delay, int num) {
+            this.delay = delay;
+            this.num   = num;
+        }
+
+
+        @Override
+        public void run() {
+            try {
+
+                if(num == 3)
+                    Thread.sleep(500);
+                System.out.println(num + "Thread start");
+                Thread.sleep(delay);
+
+            } catch (InterruptedException ignore) {
+            }
+            synchronized (atcLocker) {
+                activeThreadsCount--;
+                if (activeThreadsCount == 0) {
+                    System.out.println("Thread final");
+                }
+            }
+            System.out.println(num + "Thread finish");
+        }
+
+        }
+    public void run() {
+        System.out.println( "Async demo" ) ;
+//        int months = 12;
+//        Thread[] threads = new Thread[months];
+//        sum = 100;
+//        activeThreadsCount = months;
+//        //multiThreadDemo();
+//        for (int i = 0; i < 12; i++) {
+//            threads[i] = new Thread(new MyThreads(i + 1));
+//            threads[i].start();
+//        }
+        int thr = 3;
+        Thread[] myThreads = new Thread[thr];
+        activeThreadsCount = 3;
+        myThreads[0] = new Thread(new MyThreads(3000,1));
+        myThreads[1] = new Thread(new MyThreads(0,2));
+        myThreads[2] = new Thread(new MyThreads(1500,3));
+        myThreads[0].start();
+        myThreads[1].start();
+        myThreads[2].start();
+    }
+
 
 
     private void multiThreadDemo(){

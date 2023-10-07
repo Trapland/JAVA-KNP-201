@@ -24,8 +24,8 @@ public class App
         //Injector injector = Guice.createInjector(new ConfigModule());
         //IocDemo iocDemo = injector.getInstance(IocDemo.class);
         //iocDemo.run();
-        Guice.createInjector(new ConfigModule()).getInstance(IocDemo.class).run();
-        //Guice.createInjector(new ConfigModule()).getInstance(AsyncDemo.class).run();
+        //Guice.createInjector(new ConfigModule()).getInstance(IocDemo.class).run();
+        Guice.createInjector(new ConfigModule()).getInstance(AsyncDemo.class).run();
         //Guice.createInjector(new ConfigModule()).getInstance(TaskDemo.class).run();
     }
 }
