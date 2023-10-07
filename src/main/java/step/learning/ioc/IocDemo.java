@@ -24,7 +24,7 @@ public class IocDemo {
     {
         System.out.println("IoC Demo");
         System.out.println(digestHashService.hash("IoC Demo"));
-        System.out.println(dsaHashService.hash("IoC Demo"));
+        System.out.println(dsaHashService.hash("IoC Demo")); // SHA-2
         System.out.println(randomService.randomHex(6));
     }
 }

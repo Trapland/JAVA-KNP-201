@@ -5,7 +5,7 @@ import com.google.inject.Provides;
 import com.google.inject.name.Names;
 import step.learning.ioc.services.hash.HashService;
 import step.learning.ioc.services.hash.Md5HashService;
-import step.learning.ioc.services.hash.SHA1;
+import step.learning.ioc.services.hash.SHA384;
 import step.learning.ioc.services.random.RandomService;
 import step.learning.ioc.services.random.RandomServiceV1;
 
@@ -20,7 +20,7 @@ public class ConfigModule extends AbstractModule {
                 .to(Md5HashService.class);
 
         bind(HashService.class).annotatedWith(Names.named("DSA-Hash"))
-                .to(SHA1.class);
+                .to(SHA384.class);
 
 
 
