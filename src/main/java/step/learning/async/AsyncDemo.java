@@ -1,11 +1,13 @@
 package step.learning.async;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 public class AsyncDemo {
 
     private double sum;
+    private StringBuilder str;
 
     private final Object sumLocker = new Object();
 
@@ -72,7 +74,43 @@ public class AsyncDemo {
             System.out.println(num + "Thread finish");
         }
 
+    }
+
+    Random r = new Random();
+
+    class ThreadsStrBuilder implements Runnable{
+        private char value;
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(1000);
+
+            } catch (InterruptedException ignore) {
+            }
+            synchronized (sumLocker) {
+                char c = ((char) (r.nextInt(10) + 48));
+
+                while (str.toString().contains(String.valueOf(c)))
+                {
+                    c = ((char)(r.nextInt(10) + 48));
+                }
+                str.append(c);
+                value = c;
+            }
+            System.out.println(" Thread with value " + value + " finish");
+
+            synchronized (atcLocker) {
+                activeThreadsCount--;
+                if (activeThreadsCount == 0) {
+                    System.out.println("---------------------------------");
+                    System.out.println("Result: " + str);
+                    System.out.println("---------------------------------");
+                }
+            }
         }
+
+    }
     public void run() {
         System.out.println( "Async demo" ) ;
 //        int months = 12;
@@ -84,15 +122,23 @@ public class AsyncDemo {
 //            threads[i] = new Thread(new MyThreads(i + 1));
 //            threads[i].start();
 //        }
-        int thr = 3;
-        Thread[] myThreads = new Thread[thr];
-        activeThreadsCount = 3;
-        myThreads[0] = new Thread(new MyThreads(3000,1));
-        myThreads[1] = new Thread(new MyThreads(0,2));
-        myThreads[2] = new Thread(new MyThreads(1500,3));
-        myThreads[0].start();
-        myThreads[1].start();
-        myThreads[2].start();
+//        int thr = 3;
+//        Thread[] myThreads = new Thread[thr];
+//        activeThreadsCount = 3;
+//        myThreads[0] = new Thread(new MyThreads(3000,1));
+//        myThreads[1] = new Thread(new MyThreads(0,2));
+//        myThreads[2] = new Thread(new MyThreads(1500,3));
+//        myThreads[0].start();
+//        myThreads[1].start();
+//        myThreads[2].start();
+        int values = 10;
+        Thread[] threads = new Thread[values];
+        str = new StringBuilder();
+        activeThreadsCount = values;
+        for (int i = 0; i < values; i++) {
+            threads[i] = new Thread(new ThreadsStrBuilder());
+            threads[i].start();
+        }
     }
 
 
