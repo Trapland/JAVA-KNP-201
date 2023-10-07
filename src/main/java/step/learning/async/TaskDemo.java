@@ -1,54 +1,111 @@
 package step.learning.async;
 
+import java.util.Locale;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class TaskDemo {
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(3) ;
-    public void run() {
-        long t1 = System.nanoTime();
-        Future<String> task1 = threadPool.submit(new Callable<String>() {
 
-            @Override
-            public String call() throws Exception {
-                System.out.println( "Task 1 start" ) ;
-                Thread.sleep( 1000 ) ;
-                return "Task 1 finish";
+    private int activeThreadsCount;
+    private double sum;
+
+    private final Object sumLocker = new Object();
+
+    private final Object atcLocker = new Object();
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(6) ;
+
+    class MonthRate implements Runnable{
+        private final int month;
+        public MonthRate(int month) {
+            this.month = month;
+        }
+
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(1000);
+
+            } catch (InterruptedException ignore) {}
+            double p = 0.1;
+            double localSum;
+            synchronized (sumLocker) {
+                localSum = sum = sum * (1.0 + p);
+
             }
-        });
+            System.out.printf(Locale.US,"month: %02d, percent: %.2f, sum: %.2f%n", month, p, localSum);
+            synchronized (atcLocker){
+                activeThreadsCount--;
+                if(activeThreadsCount == 0){
+                    System.out.printf(Locale.US,"---------%ntotal: %.2f%n",sum);
+                }
+            }
 
-        for (int i = 0; i < 10; i++) {
-            printNumber(10 + i);
         }
-        Future<String> supplyTask = CompletableFuture
-                .supplyAsync(supplier)
-                .thenApply(continuation)
-                .thenApply(continuation2);
-        Future<?> task2 = CompletableFuture.supplyAsync(supplier2)
-                .thenApply(continuation2)
-                .thenAccept(acceptor);
 
+
+    }
+    public void run(){
+//        long t1 = System.nanoTime();
+//        Future<String> task1 = threadPool.submit(new Callable<String>() {
+//
+//            @Override
+//            public String call() throws Exception {
+//                System.out.println( "Task 1 start" ) ;
+//                Thread.sleep( 1000 ) ;
+//                return "Task 1 finish";
+//            }
+//        });
+//
+//        for (int i = 0; i < 10; i++) {
+//            printNumber(10 + i);
+//        }
+//
+//        Future<String> supplyTask = CompletableFuture
+//                .supplyAsync(supplier)
+//                .thenApply(continuation)
+//                .thenApply(continuation2);
+//        Future<?> task2 = CompletableFuture.supplyAsync(supplier2)
+//                .thenApply(continuation2)
+//                .thenAccept(acceptor);
+//
+//        try {
+//            String res = task1.get();
+//            System.out.println(res);
+//            System.out.println(supplyTask.get());
+//        } catch (ExecutionException | InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        try {
+//            threadPool.shutdown();
+//            threadPool.awaitTermination(1,TimeUnit.MINUTES);
+//            threadPool.shutdownNow();
+//        }
+//        catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        long t2 = System.nanoTime();
+//
+//        System.out.println("Main finish " + (t2-t1) / 1e9);
+
+        int months = 12;
+        Thread[] threads = new Thread[months];
+        sum = 100;
+        activeThreadsCount = 6;
+        for (int i = 0; i < activeThreadsCount; i++) {
+            inflation(i+1);
+        }
         try {
-            String res = task1.get();
-            System.out.println(res);
-            System.out.println(supplyTask.get());
-        } catch (ExecutionException | InterruptedException e) {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        try {
-            threadPool.shutdown();
-            threadPool.awaitTermination(1,TimeUnit.MINUTES);
-            threadPool.shutdownNow();
+        for (int i = activeThreadsCount; i < months; i++) {
+            inflation(i+1);
         }
-        catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        long t2 = System.nanoTime();
-
-        System.out.println("Main finish " + (t2-t1) / 1e9);
-
+        threadPool.shutdown();
     }
 
     private final Function<String, String> continuation = str -> str + " continued";
@@ -101,7 +158,22 @@ public class TaskDemo {
                 }
         );
     }
+
+
+    private Future<?> inflation( int month ) {
+        return threadPool.submit(
+                () -> {
+                    try {
+                        System.out.println("Task starts for month" + month);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    synchronized (sumLocker) {
+                        sum *= (1.0 + 0.1);
+                        System.out.println("Current sum: " + sum);
+                    }
+                }
+        );
+    }
 }
-/*
-Багатозадачність - використання об'єктів рівня мови/платформи (Future, Task, Promise)
- */
