@@ -39,6 +39,7 @@ public class Newspaper extends Literature implements Periodic, Printable{
         return "daily";
     }
 
+    @FromJsonParser
     public static Newspaper fromJson(JsonObject jsonObject) throws ParseException {
         String[] requiredField = {"title","date"};
         for (String field : requiredField){

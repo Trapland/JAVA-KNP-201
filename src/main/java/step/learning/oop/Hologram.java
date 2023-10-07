@@ -24,6 +24,7 @@ public class Hologram extends Literature {
         return String.format("Hologram '%s' isAnimated '%s'", super.getTitle(),this.isAnimated());
     }
 
+    @FromJsonParser
     public static Hologram fromJson(JsonObject jsonObject) throws ParseException {
         String[] requiredField = {"title","animated"};
         for (String field : requiredField){

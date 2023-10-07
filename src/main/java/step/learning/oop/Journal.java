@@ -30,6 +30,8 @@ public class Journal extends Literature implements Copyable,Periodic, Printable,
     public String getPeriod() {
         return "monthly";
     }
+
+    @FromJsonParser
     public static Journal fromJson(JsonObject jsonObject) throws ParseException {
         String[] requiredField = {"title","number"};
         for (String field : requiredField){

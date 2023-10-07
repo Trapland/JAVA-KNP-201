@@ -25,6 +25,7 @@ public class Book extends Literature implements Copyable, Printable,Multiple{
         return String.format("Book: %s %s",this.getAuthor(),super.getTitle());
     }
 
+    @FromJsonParser
     public static Book fromJson(JsonObject jsonObject) throws ParseException{
         String[] requiredField = {"author","title"};
         for (String field : requiredField){
